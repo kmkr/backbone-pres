@@ -1,0 +1,288 @@
+<html>
+<head>
+<title>Backbone med Coffee</title>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+  <script type='text/javascript' src='js/jquery-1.7.1.min.js'> </script>
+  <script type='text/javascript' src="js/prettify/prettify.js"></script>
+  <script type='text/javascript' src="js/slides.js"></script>
+  <script type='text/javascript' src="js/custom.js"></script>
+  <link rel="stylesheet" href="styles/styles.css" />
+  <link rel="stylesheet" href="styles/prettify.css" />
+  <link href='http://fonts.googleapis.com/css?family=Port+Lligat+Slab' rel='stylesheet' type='text/css'>
+</head>
+<body>
+
+<hint>Backbone</hint>
+
+<section class='slide' id='slide1'>
+<br/><br/><br/><br/><br/><br/><br/><br/>
+<span>Backbone</span>
+</section>
+
+<section class='slide' id='slide2'>
+  <span class='slideHead'>Agenda</span><br/>
+  <span class='content'>
+    <ol class="agenda">
+      <li>Hva er (og er ikke) Backbone?</li>
+      <li>Oversikt over konsepter i Backbone</li>
+      <li>Backbone-models</li>
+      <li>Backbone-collections</li>
+      <li>Backbone-views</li>
+      <li>Backbone-demo</li>
+    </ol>
+    <div class='demo_explainer'>
+      kris-mikael.krister@iteraconsulting.no
+    </div>
+  </span>
+</section>
+
+<section class='slide' id='slide3'>
+  <span class='slideHead'>Hva er Backbone?</span><br/>
+  <div class="content">
+    <div class="box happy">
+      <span class="label">Backbone:</span>
+      <ul>
+        <li>Er et MVC (liknende) javascriptrammeverk</li>
+        <li>Er lightweight, minimalistisk, setter få krav og er backend agnostic</li>
+        <li>... men legger opp til et REST-grensesnitt for persistering</li>
+        <li>Har et (overraskende) rikt API</li>
+        <li>Er open source og godt dokumentert</li>
+      </ul>
+    </div>
+
+    <div class="box happy">
+      <span class="label">Gevinst:</span>
+      <ul>
+        <li>Hjelper til å strukturere kode i en JS-applikasjon</li>
+        <li>Introduserer konsepter som frikobler kode og hjelper til å opprettholde orden</li>
+        <li>No more (?) jQuery-spaghetti</li> 
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class='slide' id='slide4'>
+  <span class='slideHead'>Hva Backbone ikke er</span><br/>
+  <div class='content'>
+    <div class="box moody">
+      <span class="label">Hva backbone ikke er</span>
+      <ul>
+        <li>Ikke et DOM-verktøy</li>
+        <li>Ikke et verktøy for å håndtere browser-bugs</li>
+        <li>Ikke et stort toolkit (som ExtJS.js/Sencha, Dojo)</p>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class='slide' id='slide5'>
+  <span class='slideHead'>Backbones arkitektur</span><br/>
+  <div class='content'>
+    <img src="images/backbone-arch.svg" />
+  </div>
+</section>
+
+<section class='slide' id="slide9">
+  <span class='slideHead'>Models</span><br/>
+  <div class='content'>
+
+    <ul>
+      <li>Databærere</li>
+      <li>Kobling til persistering (REST, Localstorage, Websockets?)</li>
+      <li>Domenespesifike metoder</li>
+      <li>Klientsidevalidering</li>
+      <li>Sender "change", "destroy", "sync", "error"-events</li>
+    </ul>
+
+    <div class="coffee box span50">
+      <span class="label">Coffee</span>
+      <pre class="span50 prettyprint lang-javascript">
+class Animal extends Backbone.Model
+  urlRoot: '/animals'
+
+  laysEggs: -&gt;
+    not @get('isMammal')
+      </pre>
+    </div>
+
+    <div class="js box span50">
+      <span class="label">JS</span>
+      <pre class="span50 prettyprint">
+var Animal = Backbone.Model.extend({
+  urlRoot: '/animals',
+
+  laysEggs: function() {
+    return !this.get('isMammal')
+  }
+});
+      </pre>
+    </div>
+
+    <ul class="api">
+      <li>model.save([attributes], [options])</li>
+      <li>model.fetch([options])</li>
+      <li>model.isValid()</li>
+      <li>model.get(attribute)</li>
+      <li>model.set(attributes, [options])</li>
+    </ul>
+
+  </div>
+</section>
+
+<section class='slide' id="slide10">
+  <span class='slideHead'>Collections</span><br/>
+  <div class='content'>
+
+    <ul>
+      <li>(Sorterte) sett med modeller</li>
+      <li>Sender "change", "add", "remove", "reset"-events</li>
+    </ul>
+
+    <div class="coffee box span50">
+      <span class="label">Coffee</span>
+      <pre class="span50 prettyprint lang-javascript">
+class NationalPark extends Backbone.Collection
+  model: Animal
+  url: "/animals"
+
+  mammals: -&gt;
+    @filter((animal) -&gt; animal.isMammal())
+
+  isThrilling: -&gt;
+    @any((animal) -&gt; animal.get('type') in [
+        'crocodile',
+        'lion',
+        'sword fish' ])
+      </pre>
+    </div>
+
+    <div class="js box span50">
+      <span class="label">JS</span>
+      <pre class="span50 prettyprint">
+var NationalPark = Backbone.Collection.extend({
+  model: Animal,
+  url: '/animals',
+
+  mammals = function() {
+    return this.filter(function(animal) {
+      return animal.isMammal();
+    }),
+
+  isThrilling = function() {
+    return this.any(function(animal) {
+      var _ref;
+      return (_ref = animal.get('type')) ===
+        'crocodile' ||
+        _ref === 'lion' ||
+        _ref === 'sword fish';
+      });
+    };
+  }
+});
+      </pre>
+    </div>
+
+    </pre>
+
+  </div>
+</section>
+
+<section class='slide' id="slide11">
+  <span class='slideHead'>Eksempler fra Collections' API</span><br/>
+  <div class='content'>
+
+    <ul>
+      <li>collection.create(attributes)</li>
+      <li>collection.forEach(iterator)</li>
+      <li>collection.map(iterator)</li>
+      <li>collection.get(id)</li>
+      <li>collection.length</li>
+      <li>collection.max(iterator)</li>
+      <li>collection.min(iterator)</li>
+      <li>collection.sortBy(iterator)</li>
+      <li>collection.groupBy(iterator)</li>
+      <li>collection.sort()</li>
+      <li>collection.invoke(methodName, [*arguments])</li>
+      <li>...</li>
+    </ul>
+    </pre>
+
+  </div>
+</section>
+
+<section class='slide' id="slide12">
+  <span class='slideHead'>Views</span><br/>
+  <div class='content'>
+
+    <ul>
+      <li>Backes opp av modeller og/eller collections</li>
+      <li>Tilknyttet  HTML-template</li>
+      <li>Events som skjer på templaten, delegeres til funksjoner i viewet</li>
+      <li>Overskriv funksjonen "render"</li>
+    </ul>
+
+    <div class="coffee box span50">
+      <span class="label">Coffee</span>
+      <pre class="span50 prettyprint lang-javascript">
+class IndexView extends Backbone.View
+  template: _.template(IndexTemplate)
+
+  events:
+    "click button"      : "showAnimals"
+
+  showAnimals: -&gt;
+    @collection.forEach( (animal) =&gt;
+      p = $('&lt;p&gt;').text(animal.get('type'))
+      @$el.append(p)
+    )
+
+  render: -&gt;
+    @$el.html(@template)
+    @
+
+    </pre>
+  </div>
+
+
+  <div class="span50">
+    <ul>
+      <li>view.el</li>
+      <li>view.$el</li>
+      <li>view.id</li>
+      <li>view.tagName</li>
+      <li>view.className</li>
+    </ul>
+    </pre>
+  </div>
+
+</div>
+</section>
+
+<section class='slide' id="slide13">
+  <span class='slideHead'>Hvordan lime dette sammen?</span><br/>
+  <div class='content'>
+
+    <div class="box important">
+      <p>National park demo viser</p>
+    </div>
+
+  </div>
+</section>
+
+<section class='slide' id="slide14">
+  <span class='slideHead'>Ressurser</span><br/>
+  <div class='content'>
+
+    <table class="resources">
+      <tr><td>Dokumentasjon og download:</td><td><a href="http://documentcloud.github.com/backbone/">http://documentcloud.github.com/backbone/</a></td></tr>
+      <tr><td>Unngå memleaks:</td><td><a href="https://github.com/thoughtbot/backbone-support">https://github.com/thoughtbot/backbone-support</a></td></tr>
+      <tr><td>Gratisbok</td><td><a href="https://github.com/addyosmani/backbone-fundamentals">https://github.com/addyosmani/backbone-fundamentals</a></td></tr>
+      <tr><td>Ikke-gratis bok</td><td><a href="https://workshops.thoughtbot.com/backbone-js-on-rails">https://workshops.thoughtbot.com/backbone-js-on-rails</a></td></tr>
+      <tr><td>Denne presentasjonen</td><td><a href="http://kmkr.github.com/coffee-backbone-pres/">http://kmkr.github.com/coffee-backbone-pres/</a></td></tr>
+    </table>
+
+  </div>
+</section>
+
+</body>
+</html>

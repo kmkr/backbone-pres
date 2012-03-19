@@ -1,0 +1,61 @@
+* tree, forklar hver ting
+* se på modell
+* se på national park
+* se på view og forklar, se ekstra på "template"
+* se på template
+* se på router
+
+Hvis tid, lag et nytt view hvor man kan legge til dyr
+
+Oppdater IndexView til å lytte på endringer i collection
+
+
+AddAnimalTemplate:
+
+np.templates.AddAnimalTemplate = """
+<label>
+  Legg til dyr, skriv inn type og trykk enter for å lagre
+  <input type="text" />
+</label>
+"""
+
+AddAnimalView:
+
+class np.views.AddAnimalView extends Backbone.View
+
+  template: _.template(np.templates.AddAnimalTemplate)
+
+  events:
+    "keypress input[name=type]"   : "addAnimalOnEnter"
+
+  addAnimalOnEnter: (e) ->
+    if e.keyCode is 13
+      @collection.add({type: $(e.currentTarget).val()})
+
+  render: ->
+    @$el.html(@template)
+    @
+
+
+IndexView:
+-  events:
+-    "click button"      : "showAnimals"
++  initialize: ->
++    @collection.on('add', @render)
+ 
+   showAnimals: ->
++    @$('li:last').hide().show('slow')
+ 
+
++  renderAddAnimalView: ->
++    view = new np.views.AddAnimalView({collection: @collection})
++    @$el.append(view.render().el)
++
+-  render: ->
++  render: =>
++    console.log @
+     @$el.html(@template)
++    @showAnimals()
++    @renderAddAnimalView()
+     @
+

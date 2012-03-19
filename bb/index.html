@@ -1,0 +1,44 @@
+<!doctype html>
+
+<html>
+  <head>
+    <title>National park</title>
+    <script>
+      np = {
+        collections: {},
+        models: {},
+        views: {},
+        templates: {},
+        routers: {}
+      }
+    </script>
+    <link rel="stylesheet" href="styles/bootstrap.css" />
+    <link rel="stylesheet" href="styles/styles.css" />
+    <script src="../js/jquery-1.7.1.min.js" type="text/javascript"></script>
+    <script src="js/libs/underscore-min.js" type="text/javascript"></script>
+    <script src="js/libs/backbone-min.js" type="text/javascript"></script>
+    <script src="js/templates/IndexTemplate.js" type="text/javascript"></script>
+    <script src="js/templates/AddAnimalTemplate.js" type="text/javascript"></script>
+    <script src="js/models/Animal.js" type="text/javascript"></script>
+    <script src="js/collections/NationalPark.js" type="text/javascript"></script>
+    <script src="js/views/IndexView.js" type="text/javascript"></script>
+    <script src="js/views/AddAnimalView.js" type="text/javascript"></script>
+    <script src="js/routers/Router.js" type="text/javascript"></script>
+    <script src="js/bootstrap.js" type="text/javascript"></script>
+  </head>
+
+  <body>
+    <div class="container">
+      <div class="row">
+        <div class="span5">
+          <div class="hero-unit">
+            <h1>National park</h1>
+            <p>We protect our animals!</p>
+          </div>
+        </div>
+        <div class="span7">
+          <div id="content"></div>
+        </div>
+      </div>
+  </body>
+</html>
